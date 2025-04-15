@@ -95,10 +95,11 @@ export class MenuScene extends Phaser.Scene {
 
   selectOption() {
     const selected = this.options[this.selectedIndex];
+    this.selectedIndex = 0;
     if (selected === "START GAME") {
       this.scene.start("GameScene");
     } else if (selected === "HI SCORES") {
-      console.log("TODO: Show high scores");
+      this.scene.start("HighScoresScene");
     }
   }
 }

@@ -6,6 +6,7 @@ import { GameScene } from "../game/scenes/GameScene";
 import { MenuScene } from "../game/scenes/MenuScene";
 import { GameOverScene } from "../game/scenes/GameOverScene";
 import { NameEntryScene } from "../game/scenes/NameEntryScene";
+import { HighScoresScene } from "../game/scenes/HighScoresScene";
 
 const Game = () => {
   const [device, setDevice] = useState<HIDDevice | null>(null);
@@ -27,7 +28,13 @@ const Game = () => {
     const initTimer = setTimeout(() => {
       gameRef.current = new Phaser.Game({
         ...config,
-        scene: [MenuScene, GameScene, GameOverScene, NameEntryScene],
+        scene: [
+          MenuScene,
+          GameScene,
+          GameOverScene,
+          NameEntryScene,
+          HighScoresScene,
+        ],
       });
     }, 50);
 

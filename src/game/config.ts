@@ -3,6 +3,7 @@ import { GameScene } from "./scenes/GameScene";
 import { GameOverScene } from "./scenes/GameOverScene";
 import { MenuScene } from "./scenes/MenuScene";
 import { NameEntryScene } from "./scenes/NameEntryScene";
+import { HighScoresScene } from "./scenes/HighScoresScene";
 
 export const gameConfig: Phaser.Types.Core.GameConfig = {
   type: Phaser.AUTO,
@@ -17,7 +18,7 @@ export const gameConfig: Phaser.Types.Core.GameConfig = {
       debug: false,
     },
   },
-  scene: [MenuScene, GameScene, GameOverScene, NameEntryScene],
+  scene: [MenuScene, GameScene, GameOverScene, NameEntryScene, HighScoresScene],
   scale: {
     parent: "game-container",
   },

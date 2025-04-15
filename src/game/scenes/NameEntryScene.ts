@@ -11,6 +11,7 @@ export class NameEntryScene extends Phaser.Scene {
 
   init(data: { score: number }) {
     this.score = data.score;
+    this.enteredName = "";
   }
 
   create() {
@@ -34,7 +35,7 @@ export class NameEntryScene extends Phaser.Scene {
         .setOrigin(0.5);
 
       this.nameText = this.add
-        .text(width / 2, height / 2, `${this.nameText ?? ""}`, {
+        .text(width / 2, height / 2, `___`, {
           fontFamily: "Monogram",
           fontSize: "20px",
           color: "#0f380f",
@@ -58,7 +59,8 @@ export class NameEntryScene extends Phaser.Scene {
   }
 
   updateNameDisplay() {
-    this.nameText.setText(this.enteredName);
+    const padded = this.enteredName.padEnd(3, "_");
+    this.nameText.setText(padded);
   }
 
   saveScore() {
