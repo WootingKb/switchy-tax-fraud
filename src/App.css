@@ -113,6 +113,11 @@ footer {
   }
 }
 
+@font-face {
+  font-family: "Monogram";
+  src: url("public/monogram.ttf") format("truetype");
+}
+
 .orientation-message {
   position: fixed;
   top: 0;

@@ -18,3 +18,10 @@ The game currently uses generated placeholder assets. To add your own custom ass
 ## License
 
 [MIT](LICENSE)
+
+## Credits
+
+Monogram is a free and Creative Commons Zero pixel font,
+made by Vinícius Menézio (@vmenezio).
+
+https://datagoblin.itch.io/monogram
