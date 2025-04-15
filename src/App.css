@@ -115,7 +115,7 @@ footer {
 
 @font-face {
   font-family: "Monogram";
-  src: url("public/assets/fonts/monogram.ttf") format("truetype");
+  src: url("assets/fonts/monogram.ttf") format("truetype");
 }
 
 .orientation-message {
