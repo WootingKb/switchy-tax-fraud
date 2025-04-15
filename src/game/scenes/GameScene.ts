@@ -144,9 +144,31 @@ export class GameScene extends Phaser.Scene {
 
   spawnObstacle() {
     const obstacleTypes = ["paper", "mail", "stapler", "taxman", "briefcase"];
-    const type = Phaser.Utils.Array.GetRandom(obstacleTypes);
-    const x = Phaser.Math.Between(0, this.cameras.main.width - 16);
-    const obstacle = new Obstacle(this, x, type);
+    const weights = [
+      { type: "normal", weight: 100 },
+      { type: "fast", weight: Math.min(this.score * 10, 40) },
+      { type: "flutter", weight: Math.min(this.score * 10, 60) },
+    ];
+    const totalWeight = weights.reduce((acc, w) => acc + w.weight, 0);
+    const roll = Phaser.Math.Between(0, totalWeight);
+    let sum = 0;
+    let movementType = "normal";
+    for (const w of weights) {
+      sum += w.weight;
+      if (roll <= sum) {
+        movementType = w.type;
+        break;
+      }
+    }
+    const obstacleType = Phaser.Utils.Array.GetRandom(obstacleTypes);
+    const x = Phaser.Math.Between(0, this.cameras.main.width);
+    const obstacle = new Obstacle(
+      this,
+      x,
+      obstacleType,
+      movementType,
+      this.score
+    );
     this.obstacles.push(obstacle);
   }
 
