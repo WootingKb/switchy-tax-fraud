@@ -10,7 +10,7 @@ export class SpriteAssets {
 
   static createSprites(scene: Phaser.Scene): void {
     scene.anims.create({
-      key: "switchy-walk",
+      key: "walk",
       frames: scene.anims.generateFrameNumbers("switchy", { start: 0, end: 2 }),
       frameRate: 6,
       repeat: -1,

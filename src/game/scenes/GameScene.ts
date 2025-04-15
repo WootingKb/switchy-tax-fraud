@@ -1,9 +1,12 @@
 import Phaser from "phaser";
+import { Player } from "../Player";
 import { PlaceholderAssets } from "../createPlaceholderAssets";
 import { AnalogKey, AnalogReport } from "../../components/ConnectDevice";
 import { SpriteAssets } from "../createSpriteAssets";
 
 export class GameScene extends Phaser.Scene {
+  private player!: Player;
+
   private switchy!: Phaser.GameObjects.Sprite;
 
   private background!: Phaser.GameObjects.TileSprite;
@@ -59,8 +62,7 @@ export class GameScene extends Phaser.Scene {
     SpriteAssets.createSprites(this);
 
     // Set up Switchy (the player character)
-    this.switchy = this.add.sprite(gameWidth / 2, gameHeight - 16, "switchy");
-    this.switchy.play("switchy-walk");
+    this.player = new Player(this, gameWidth / 2, gameHeight - 16, "switchy");
 
     // Collision optimizations
     // this.switchy.setCollideWorldBounds(true);
@@ -80,11 +82,7 @@ export class GameScene extends Phaser.Scene {
     // The A key moves from center to the left of the screen
     // The D key moves from center to the right of the screen
     // Update position according to horizontal
-    this.switchy.setPosition(
-      this.cameras.main.width / 2 +
-        (this.horizontal * this.cameras.main.width) / 2,
-      this.cameras.main.height - 16
-    );
+    this.player.update(this.horizontal);
 
     // Jump when space is pressed or screen is tapped (handled via pointer events)
     // if (this.input.keyboard && Phaser.Input.Keyboard.JustDown(this.jumpKey)) {
