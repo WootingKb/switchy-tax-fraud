@@ -26,7 +26,7 @@ export class PlaceholderAssets {
 
   private static createBackgroundTexture(scene: Phaser.Scene): void {
     const width = 800;
-    const height = 600;
+    const height = 800;
     const graphics = scene.make.graphics();
 
     // Sky color (since we can't do gradient easily)
