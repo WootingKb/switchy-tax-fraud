@@ -28,13 +28,15 @@ export class MenuScene extends Phaser.Scene {
           color: "#0f380f",
         })
         .setOrigin(0.5, 0.5);
+
       this.add
         .text(width / 2, height - 16, "2025 heidi@wooting", {
           fontFamily: "Monogram",
-          fontSize: "14px",
+          fontSize: "16px",
           color: "#0f380f",
         })
         .setOrigin(0.5, 0.5);
+
       this.add
         .text(width / 2, height / 2 - 12, "TAX FRAUD", {
           fontFamily: "Monogram",

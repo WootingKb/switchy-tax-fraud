@@ -11,6 +11,10 @@ export class GameScene extends Phaser.Scene {
   private obstacles: Obstacle[] = [];
   private obstacleTimer: number = 0;
 
+  private score: number = 0;
+  private scoreText!: Phaser.GameObjects.Text;
+  private scoreTimer!: Phaser.Time.TimerEvent;
+
   private switchy!: Phaser.GameObjects.Sprite;
 
   private background!: Phaser.GameObjects.TileSprite;
@@ -54,6 +58,7 @@ export class GameScene extends Phaser.Scene {
 
   create() {
     this.gameEnded = false;
+    this.score = 0;
     // Get current game dimensions
     const gameWidth = this.cameras.main.width;
     const gameHeight = this.cameras.main.height;
@@ -69,6 +74,26 @@ export class GameScene extends Phaser.Scene {
 
     // Load sprites from asset handler
     SpriteAssets.createSprites(this);
+
+    document.fonts.load('24px "Monogram"').then(() => {
+      this.scoreText = this.add
+        .text(8, 0, `${this.score}`, {
+          fontFamily: "Monogram",
+          fontSize: "24px",
+          color: "#0f380f",
+        })
+        .setOrigin(0, 0)
+        .setDepth(1000);
+    });
+
+    this.scoreTimer = this.time.addEvent({
+      delay: 2000,
+      loop: true,
+      callback: () => {
+        this.score++;
+        this.scoreText.setText(`${this.score}`);
+      },
+    });
 
     // Set up Switchy (the player character)
     this.player = new Player(this, gameWidth / 2, gameHeight - 16, "switchy");
@@ -127,9 +152,12 @@ export class GameScene extends Phaser.Scene {
 
   handlePlayerHit() {
     if (this.gameEnded) return;
+    this.scoreTimer.remove(false);
     this.physics.pause();
     this.gameEnded = true;
-    this.playWipeTransition(() => this.scene.start("GameOverScene"));
+    this.playWipeTransition(() =>
+      this.scene.start("GameOverScene", { score: this.score })
+    );
   }
 
   playWipeTransition(onComplete: () => void) {
