@@ -36,7 +36,7 @@ export class PlaceholderAssets {
     // Add some simple clouds
     graphics.fillStyle(0xffffff);
     graphics.fillCircle(100, 100, 30);
-s
+
     graphics.generateTexture("background", width, height);
     graphics.destroy();
   }
