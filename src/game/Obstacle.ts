@@ -29,4 +29,8 @@ export class Obstacle {
   isAlive(): boolean {
     return this.sprite.active;
   }
+
+  destroy(): void {
+    this.sprite.destroy();
+  }
 }

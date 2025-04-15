@@ -22,4 +22,8 @@ export class Player {
   getBody() {
     return this.sprite;
   }
+
+  destroy() {
+    this.sprite.destroy();
+  }
 }

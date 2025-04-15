@@ -21,6 +21,8 @@ export class GameScene extends Phaser.Scene {
 
   private horizontal: number = 0;
 
+  private gameEnded: boolean = false;
+
   constructor() {
     super("GameScene");
   }
@@ -46,9 +48,12 @@ export class GameScene extends Phaser.Scene {
 
     // Load sprites from asset handler
     SpriteAssets.loadSpriteSheets(this);
+
+    SpriteAssets.loadSimpleSprites(this);
   }
 
   create() {
+    this.gameEnded = false;
     // Get current game dimensions
     const gameWidth = this.cameras.main.width;
     const gameHeight = this.cameras.main.height;
@@ -78,6 +83,8 @@ export class GameScene extends Phaser.Scene {
         Phaser.Input.Keyboard.KeyCodes.SPACE
       );
     }
+
+    this.events.on("shutdown", this.cleanup, this);
   }
 
   update(time: number, delta: number) {
@@ -119,6 +126,34 @@ export class GameScene extends Phaser.Scene {
   }
 
   handlePlayerHit() {
-    console.log("SWITCHY GOT BUSTED BY THE IRS 🚨");
+    if (this.gameEnded) return;
+    this.physics.pause();
+    this.gameEnded = true;
+    this.playWipeTransition(() => this.scene.start("GameOverScene"));
+  }
+
+  playWipeTransition(onComplete: () => void) {
+    const wipe = this.add
+      .sprite(0, 144, "screenwipe")
+      .setOrigin(0, 0)
+      .setDepth(1000);
+    this.tweens.add({
+      targets: wipe,
+      y: 0,
+      duration: 600,
+      ease: "Linear",
+      onComplete: () => {
+        onComplete();
+      },
+    });
+  }
+
+  cleanup() {
+    if (this.player) {
+      this.player.destroy();
+    }
+
+    this.obstacles.forEach((o) => o.destroy());
+    this.obstacles = [];
   }
 }
