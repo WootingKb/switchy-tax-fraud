@@ -22,7 +22,7 @@ export class MenuScene extends Phaser.Scene {
 
     document.fonts.load('16px "Monogram"').then(() => {
       this.add
-        .text(width / 2, height - 32, "Play with WASD :)", {
+        .text(width / 2, height - 32, "Play with WASD & Space :)", {
           fontFamily: "Monogram",
           fontSize: "16px",
           color: "#0f380f",
