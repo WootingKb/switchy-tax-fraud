@@ -3,9 +3,13 @@ import { Player } from "../Player";
 import { PlaceholderAssets } from "../createPlaceholderAssets";
 import { AnalogKey, AnalogReport } from "../../components/ConnectDevice";
 import { SpriteAssets } from "../createSpriteAssets";
+import { Obstacle } from "../Obstacle";
 
 export class GameScene extends Phaser.Scene {
   private player!: Player;
+
+  private obstacles: Obstacle[] = [];
+  private obstacleTimer: number = 0;
 
   private switchy!: Phaser.GameObjects.Sprite;
 
@@ -66,6 +70,7 @@ export class GameScene extends Phaser.Scene {
 
     // Collision optimizations
     // this.switchy.setCollideWorldBounds(true);
+    this.physics.world.setBoundsCollision(true, true, true, true);
 
     // Set up keyboard controls - ensure keyboard exists
     if (this.input.keyboard) {
@@ -84,9 +89,36 @@ export class GameScene extends Phaser.Scene {
     // Update position according to horizontal
     this.player.update(this.horizontal);
 
+    this.obstacleTimer += delta;
+
+    if (this.obstacleTimer > 1000) {
+      this.spawnObstacle();
+      this.obstacleTimer = 0;
+    }
+
+    this.obstacles = this.obstacles.filter((o) => {
+      o.update(deltaSeconds);
+      this.physics.world.overlap(this.player.getBody(), o.getBody(), () => {
+        this.handlePlayerHit();
+      });
+      return o.isAlive();
+    });
+
     // Jump when space is pressed or screen is tapped (handled via pointer events)
     // if (this.input.keyboard && Phaser.Input.Keyboard.JustDown(this.jumpKey)) {
     //   this.jump();
     // }
+  }
+
+  spawnObstacle() {
+    const obstacleTypes = ["paper", "mail", "stapler", "taxman", "briefcase"];
+    const type = Phaser.Utils.Array.GetRandom(obstacleTypes);
+    const x = Phaser.Math.Between(0, this.cameras.main.width - 16);
+    const obstacle = new Obstacle(this, x, type);
+    this.obstacles.push(obstacle);
+  }
+
+  handlePlayerHit() {
+    console.log("SWITCHY GOT BUSTED BY THE IRS 🚨");
   }
 }
