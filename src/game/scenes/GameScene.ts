@@ -48,6 +48,10 @@ export class GameScene extends Phaser.Scene {
 
     // Load specific image asset instead
     // this.load.image("switchy", "assets/switchy/idle.png");
+    this.load.spritesheet("switchy", "src/assets/switchy.png", {
+      frameWidth: 16,
+      frameHeight: 16,
+    });
   }
 
   create() {
@@ -66,7 +70,14 @@ export class GameScene extends Phaser.Scene {
 
     // Set up Switchy (the player character) using the hello texture to start
     // No physics for now
+    this.anims.create({
+      key: "switchy-walk",
+      frames: this.anims.generateFrameNumbers("switchy", { start: 0, end: 2 }),
+      frameRate: 6,
+      repeat: -1,
+    });
     this.switchy = this.add.sprite(gameWidth / 2, gameHeight / 2, "switchy");
+    this.switchy.play("switchy-walk");
 
     // Collision optimizations
     // this.switchy.setCollideWorldBounds(true);

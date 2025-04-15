@@ -94,8 +94,6 @@ footer {
 }
 
 .game-container canvas {
-  width: 100% !important;
-  height: 100% !important;
   display: block !important;
 }
 
@@ -110,10 +108,7 @@ footer {
   }
 
   .game-container {
-    width: 800px;
-    height: 600px;
     max-width: 100%;
-    border-radius: 8px;
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
   }
 }
@@ -150,7 +145,6 @@ footer {
   background: #646cff;
   color: white;
   border: none;
-  border-radius: 4px;
   cursor: pointer;
 }
 
