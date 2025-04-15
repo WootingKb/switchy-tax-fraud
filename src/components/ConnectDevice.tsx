@@ -66,7 +66,13 @@ export function ConnectDevice({ device, onConnect }: ConnectDeviceProps) {
   }, [onConnect]);
 
   return (
-    <button className="bg-blue-500 text-white p-2 rounded-md" onClick={onClick}>
+    <button
+      className="bg-blue-500 text-white p-2 rounded-md"
+      onClick={onClick}
+      onKeyDown={(e) => {
+        e.preventDefault();
+      }}
+    >
       {device ? `${device.productName} Connected` : "Connect Device"}
     </button>
   );
