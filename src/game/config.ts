@@ -12,22 +12,26 @@ export const gameConfig: Phaser.Types.Core.GameConfig = {
     },
   },
   scene: [GameScene],
-  pixelArt: true,
+  // pixelArt: true,
   scale: {
-    mode: Phaser.Scale.RESIZE,
+    parent: "game-div",
+
+    mode: Phaser.Scale.FIT,
     autoCenter: Phaser.Scale.CENTER_BOTH,
-    parent: "game-container",
-    expandParent: true,
-    width: "100%",
-    height: "100%",
+
+    // expandParent: true,
+
+    // Just create a square game container
+    width: 1000,
+    height: 1000,
   },
   input: {
     activePointers: 3,
     touch: { capture: true },
   },
   render: {
-    antialias: false,
-    pixelArt: true,
-    roundPixels: true,
+    antialias: true,
+    // pixelArt: true,
+    // roundPixels: true,
   },
 };

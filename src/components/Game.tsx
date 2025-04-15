@@ -9,55 +9,12 @@ const Game = () => {
 
   const gameRef = useRef<Phaser.Game | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-  const [containerSize, setContainerSize] = useState({ width: 0, height: 0 });
 
   useEffect(() => {
     // Only create the game once
     if (gameRef.current || !containerRef.current) return;
 
-    // Initialize the game
-    const config = {
-      ...gameConfig,
-    };
-
-    // Small delay to ensure DOM has fully rendered
-    const initTimer = setTimeout(() => {
-      gameRef.current = new Phaser.Game(config);
-    }, 50);
-
-    // Handle orientation change and resize events
-    const resizeGame = () => {
-      if (gameRef.current) {
-        gameRef.current.scale.refresh();
-
-        // Update container size state to force React re-render
-        if (containerRef.current) {
-          setContainerSize({
-            width: containerRef.current.clientWidth,
-            height: containerRef.current.clientHeight,
-          });
-        }
-      }
-    };
-
-    window.addEventListener("resize", resizeGame);
-    window.addEventListener("orientationchange", resizeGame);
-
-    // Trigger initial resize after game is created
-    const initialResizeTimer = setTimeout(resizeGame, 200);
-
-    // Cleanup when component unmounts
-    return () => {
-      clearTimeout(initTimer);
-      clearTimeout(initialResizeTimer);
-      window.removeEventListener("resize", resizeGame);
-      window.removeEventListener("orientationchange", resizeGame);
-
-      if (gameRef.current) {
-        gameRef.current.destroy(true);
-        gameRef.current = null;
-      }
-    };
+    gameRef.current = new Phaser.Game(gameConfig);
   }, []);
 
   // Force container to take up full size
@@ -115,25 +72,29 @@ const Game = () => {
   }, []);
 
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        width: "100%",
-        height: "100%",
-        gap: "1rem",
-      }}
-    >
+    <>
       <ConnectDevice onConnect={onDeviceConnect} device={device} />
-      <div style={{ width: "100%", height: "100%", position: "relative" }}>
-        <div
-          ref={containerRef}
-          id="game-container"
-          className="game-container"
-          style={{ width: "100%", height: "100%" }}
-        />
+
+      <div
+        id="game-div"
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          width: "100%",
+          height: "75%",
+          position: "relative",
+        }}
+      >
+        <div style={{ width: "100%", height: "100%", position: "relative" }}>
+          <div
+            ref={containerRef}
+            id="game-container"
+            className="game-container"
+            style={{ width: "100%", height: "100%" }}
+          />
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 
