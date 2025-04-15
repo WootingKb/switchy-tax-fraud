@@ -98,7 +98,7 @@ const Game = () => {
         gap: "1rem",
       }}
     >
-      <ConnectDevice onConnect={onDeviceConnect} />
+      <ConnectDevice onConnect={onDeviceConnect} isConnected={!!device} />
       <div style={{ width: "100%", height: "100%", position: "relative" }}>
         <div
           ref={containerRef}

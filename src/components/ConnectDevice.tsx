@@ -15,10 +15,11 @@ declare global {
 }
 
 interface ConnectDeviceProps {
+  isConnected: boolean;
   onConnect: (device: HIDDevice) => void;
 }
 
-export function ConnectDevice({ onConnect }: ConnectDeviceProps) {
+export function ConnectDevice({ isConnected, onConnect }: ConnectDeviceProps) {
   const onClick = useCallback(async () => {
     const device = await navigator.hid.requestDevice({
       filters: [
@@ -66,7 +67,7 @@ export function ConnectDevice({ onConnect }: ConnectDeviceProps) {
 
   return (
     <button className="bg-blue-500 text-white p-2 rounded-md" onClick={onClick}>
-      Connect Device
+      {isConnected ? "Connected" : "Connect Device"}
     </button>
   );
 }
