@@ -24,12 +24,9 @@ export class GameScene extends Phaser.Scene {
 
   onAnalogReport = (event: AnalogReport) => {
     const { data } = event;
-    const wKey = data.find((d) => d.key === AnalogKey.W)?.value ?? 0;
-    const sKey = data.find((d) => d.key === AnalogKey.S)?.value ?? 0;
     const aKey = data.find((d) => d.key === AnalogKey.A)?.value ?? 0;
     const dKey = data.find((d) => d.key === AnalogKey.D)?.value ?? 0;
 
-    const vertical = sKey - wKey;
     const horizontal = dKey - aKey;
 
     // The W key moves from center to the top of the screen
@@ -38,7 +35,7 @@ export class GameScene extends Phaser.Scene {
     // The D key moves from center to the right of the screen
     this.switchy.setPosition(
       this.cameras.main.width / 2 + (horizontal * this.cameras.main.width) / 2,
-      this.cameras.main.height / 2 + (vertical * this.cameras.main.height) / 2
+      this.cameras.main.height - 16
     );
   };
 
@@ -76,7 +73,7 @@ export class GameScene extends Phaser.Scene {
       frameRate: 6,
       repeat: -1,
     });
-    this.switchy = this.add.sprite(gameWidth / 2, gameHeight / 2, "switchy");
+    this.switchy = this.add.sprite(gameWidth / 2, gameHeight - 16, "switchy");
     this.switchy.play("switchy-walk");
 
     // Collision optimizations
