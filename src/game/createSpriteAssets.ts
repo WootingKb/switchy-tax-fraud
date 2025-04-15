@@ -3,43 +3,43 @@ import Phaser from "phaser";
 export class SpriteAssets {
   static loadSimpleSprites(scene: Phaser.Scene): void {
     if (!scene.textures.exists("screenwipe")) {
-      scene.load.image("screenwipe", "src/assets/screenwipe.png");
+      scene.load.image("screenwipe", "public/assets/gfx/screenwipe.png");
     }
   }
 
   static loadSpriteSheets(scene: Phaser.Scene): void {
     if (!scene.textures.exists("switchy")) {
-      scene.load.spritesheet("switchy", "src/assets/switchy.png", {
+      scene.load.spritesheet("switchy", "public/assets/gfx/switchy.png", {
         frameWidth: 16,
         frameHeight: 16,
       });
     }
     if (!scene.textures.exists("briefcase")) {
-      scene.load.spritesheet("briefcase", "src/assets/briefcase.png", {
+      scene.load.spritesheet("briefcase", "public/assets/gfx/briefcase.png", {
         frameWidth: 16,
         frameHeight: 16,
       });
     }
     if (!scene.textures.exists("mail")) {
-      scene.load.spritesheet("mail", "src/assets/mail.png", {
+      scene.load.spritesheet("mail", "public/assets/gfx/mail.png", {
         frameWidth: 16,
         frameHeight: 16,
       });
     }
     if (!scene.textures.exists("paper")) {
-      scene.load.spritesheet("paper", "src/assets/paper.png", {
+      scene.load.spritesheet("paper", "public/assets/gfx/paper.png", {
         frameWidth: 16,
         frameHeight: 16,
       });
     }
     if (!scene.textures.exists("stapler")) {
-      scene.load.spritesheet("stapler", "src/assets/stapler.png", {
+      scene.load.spritesheet("stapler", "public/assets/gfx/stapler.png", {
         frameWidth: 16,
         frameHeight: 16,
       });
     }
     if (!scene.textures.exists("taxman")) {
-      scene.load.spritesheet("taxman", "src/assets/taxman.png", {
+      scene.load.spritesheet("taxman", "public/assets/gfx/taxman.png", {
         frameWidth: 32,
         frameHeight: 64,
       });
