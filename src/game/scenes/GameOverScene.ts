@@ -31,7 +31,7 @@ export class GameOverScene extends Phaser.Scene {
         .setOrigin(0.5);
 
       this.add
-        .text(width / 2, height / 2 + 16, "Press Enter to continue", {
+        .text(width / 2, height / 2 + 16, "Press Space to continue", {
           fontFamily: "Monogram",
           fontSize: "16px",
           color: "#0f380f",
@@ -39,8 +39,8 @@ export class GameOverScene extends Phaser.Scene {
         .setOrigin(0.5);
     });
 
-    this.input.keyboard?.once("keydown-ENTER", () =>
-      this.scene.start("MenuScene")
+    this.input.keyboard?.once("keydown-SPACE", () =>
+      this.scene.start("NameEntryScene", { score: this.score })
     );
   }
 }

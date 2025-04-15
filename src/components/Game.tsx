@@ -5,6 +5,7 @@ import { ConnectDevice } from "./ConnectDevice";
 import { GameScene } from "../game/scenes/GameScene";
 import { MenuScene } from "../game/scenes/MenuScene";
 import { GameOverScene } from "../game/scenes/GameOverScene";
+import { NameEntryScene } from "../game/scenes/NameEntryScene";
 
 const Game = () => {
   const [device, setDevice] = useState<HIDDevice | null>(null);
@@ -26,7 +27,7 @@ const Game = () => {
     const initTimer = setTimeout(() => {
       gameRef.current = new Phaser.Game({
         ...config,
-        scene: [MenuScene, GameScene, GameOverScene],
+        scene: [MenuScene, GameScene, GameOverScene, NameEntryScene],
       });
     }, 50);
 

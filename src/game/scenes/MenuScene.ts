@@ -83,7 +83,7 @@ export class MenuScene extends Phaser.Scene {
       this.updateCursor();
     });
 
-    this.input.keyboard?.on("keydown-ENTER", () => {
+    this.input.keyboard?.on("keydown-SPACE", () => {
       this.selectOption();
     });
   }
