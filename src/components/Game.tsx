@@ -88,6 +88,32 @@ const Game = () => {
     });
   }, []);
 
+  // Handle device disconnect
+  useEffect(() => {
+    const handler = (event: HIDConnectionEvent) => {
+      console.log("Device disconnected", event);
+
+      setDevice((existing) => {
+        if (existing && existing === event.device) {
+          existing.close();
+          (
+            gameRef.current?.scene.getScene("GameScene") as GameScene
+          )?.closeDevice();
+          return null;
+        }
+
+        return existing;
+      });
+    };
+
+    navigator.hid.addEventListener("disconnect", handler);
+
+    // Cleanup
+    return () => {
+      navigator.hid.removeEventListener("disconnect", handler);
+    };
+  }, []);
+
   return (
     <div
       style={{
