@@ -1,13 +1,14 @@
 import Phaser from "phaser";
 import { GameScene } from "./scenes/GameScene";
 import { GameOverScene } from "./scenes/GameOverScene";
+import { MenuScene } from "./scenes/MenuScene";
 
 export const gameConfig: Phaser.Types.Core.GameConfig = {
   type: Phaser.AUTO,
   backgroundColor: "#9bbc0f",
   width: 160,
   height: 144,
-  zoom: 4,
+  zoom: 6,
   physics: {
     default: "arcade",
     arcade: {
@@ -15,7 +16,7 @@ export const gameConfig: Phaser.Types.Core.GameConfig = {
       debug: false,
     },
   },
-  scene: [GameScene, GameOverScene],
+  scene: [MenuScene, GameScene, GameOverScene],
   scale: {
     parent: "game-container",
   },

@@ -3,6 +3,8 @@ import Phaser from "phaser";
 import { gameConfig } from "../game/config";
 import { ConnectDevice } from "./ConnectDevice";
 import { GameScene } from "../game/scenes/GameScene";
+import { MenuScene } from "../game/scenes/MenuScene";
+import { GameOverScene } from "../game/scenes/GameOverScene";
 
 const Game = () => {
   const [device, setDevice] = useState<HIDDevice | null>(null);
@@ -22,7 +24,10 @@ const Game = () => {
 
     // Small delay to ensure DOM has fully rendered
     const initTimer = setTimeout(() => {
-      gameRef.current = new Phaser.Game(config);
+      gameRef.current = new Phaser.Game({
+        ...config,
+        scene: [MenuScene, GameScene, GameOverScene],
+      });
     }, 50);
 
     // Handle orientation change and resize events

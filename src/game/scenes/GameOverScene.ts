@@ -17,7 +17,7 @@ export class GameOverScene extends Phaser.Scene {
         .setOrigin(0.5);
 
       this.add
-        .text(width / 2, height / 2 + 10, "Press R to retry", {
+        .text(width / 2, height / 2 + 10, "Press Backspace to go back", {
           fontFamily: "Monogram",
           fontSize: "16px",
           color: "#0f380f",
@@ -25,6 +25,8 @@ export class GameOverScene extends Phaser.Scene {
         .setOrigin(0.5);
     });
 
-    this.input.keyboard?.once("keydown-R", () => this.scene.start("GameScene"));
+    this.input.keyboard?.once("keydown-BACKSPACE", () =>
+      this.scene.start("MenuScene")
+    );
   }
 }
