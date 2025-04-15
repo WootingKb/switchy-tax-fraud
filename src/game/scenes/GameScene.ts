@@ -63,17 +63,17 @@ export class GameScene extends Phaser.Scene {
     const gameWidth = this.cameras.main.width;
     const gameHeight = this.cameras.main.height;
 
-    // Set up background to fill the screen
-    this.background = this.add
-      .tileSprite(0, 0, gameWidth, gameHeight, "background")
-      .setOrigin(0, 0)
-      .setScrollFactor(0);
-
     // Update physics settings for framerate independence
     this.physics.world.setFPS(60);
 
     // Load sprites from asset handler
     SpriteAssets.createSprites(this);
+
+    // Set up background to fill the screen
+    this.background = this.add
+      .tileSprite(0, 0, gameWidth, gameHeight, "bg")
+      .setOrigin(0, 0)
+      .setScrollFactor(0);
 
     document.fonts.load('24px "Monogram"').then(() => {
       this.scoreText = this.add
@@ -116,6 +116,8 @@ export class GameScene extends Phaser.Scene {
     // Convert delta to seconds for easier calculations
     const deltaSeconds = delta / 1000;
 
+    this.background.tilePositionY -= delta * 0.01;
+
     // The A key moves from center to the left of the screen
     // The D key moves from center to the right of the screen
     // Update position according to horizontal
@@ -123,7 +125,8 @@ export class GameScene extends Phaser.Scene {
 
     this.obstacleTimer += delta;
 
-    if (this.obstacleTimer > 1000) {
+    // difficulty curve
+    if (this.obstacleTimer > Math.max(300, 1000 * Math.pow(0.97, this.score))) {
       this.spawnObstacle();
       this.obstacleTimer = 0;
     }

@@ -50,6 +50,12 @@ export class SpriteAssets {
         frameHeight: 64,
       });
     }
+    if (!scene.textures.exists("bg")) {
+      scene.load.spritesheet("bg", "./assets/gfx/bg.png", {
+        frameWidth: 16,
+        frameHeight: 16,
+      });
+    }
   }
 
   static createSprites(scene: Phaser.Scene): void {
@@ -108,6 +114,17 @@ export class SpriteAssets {
         frames: scene.anims.generateFrameNumbers("taxman", {
           start: 0,
           end: 1,
+        }),
+        frameRate: 6,
+        repeat: -1,
+      });
+    }
+    if (!scene.anims.exists("bg")) {
+      scene.anims.create({
+        key: "bg",
+        frames: scene.anims.generateFrameNumbers("bg", {
+          start: 0,
+          end: 0,
         }),
         frameRate: 6,
         repeat: -1,
