@@ -1,6 +1,7 @@
 import Phaser from "phaser";
 import { PlaceholderAssets } from "../createPlaceholderAssets";
 import { AnalogKey, AnalogReport } from "../../components/ConnectDevice";
+import { SpriteAssets } from "../createSpriteAssets";
 
 export class GameScene extends Phaser.Scene {
   private switchy!: Phaser.GameObjects.Sprite;
@@ -10,6 +11,8 @@ export class GameScene extends Phaser.Scene {
   private jumpKey!: Phaser.Input.Keyboard.Key;
 
   private device!: HIDDevice | undefined;
+
+  private horizontal: number = 0;
 
   constructor() {
     super("GameScene");
@@ -27,28 +30,15 @@ export class GameScene extends Phaser.Scene {
     const aKey = data.find((d) => d.key === AnalogKey.A)?.value ?? 0;
     const dKey = data.find((d) => d.key === AnalogKey.D)?.value ?? 0;
 
-    const horizontal = dKey - aKey;
-
-    // The W key moves from center to the top of the screen
-    // The S key moves from center to the bottom of the screen
-    // The A key moves from center to the left of the screen
-    // The D key moves from center to the right of the screen
-    this.switchy.setPosition(
-      this.cameras.main.width / 2 + (horizontal * this.cameras.main.width) / 2,
-      this.cameras.main.height - 16
-    );
+    this.horizontal = dKey - aKey;
   };
 
   preload() {
     // Create placeholder assets directly in the game
     PlaceholderAssets.createAssets(this);
 
-    // Load specific image asset instead
-    // this.load.image("switchy", "assets/switchy/idle.png");
-    this.load.spritesheet("switchy", "src/assets/switchy.png", {
-      frameWidth: 16,
-      frameHeight: 16,
-    });
+    // Load sprites from asset handler
+    SpriteAssets.loadSpriteSheets(this);
   }
 
   create() {
@@ -65,14 +55,10 @@ export class GameScene extends Phaser.Scene {
     // Update physics settings for framerate independence
     this.physics.world.setFPS(60);
 
-    // Set up Switchy (the player character) using the hello texture to start
-    // No physics for now
-    this.anims.create({
-      key: "switchy-walk",
-      frames: this.anims.generateFrameNumbers("switchy", { start: 0, end: 2 }),
-      frameRate: 6,
-      repeat: -1,
-    });
+    // Load sprites from asset handler
+    SpriteAssets.createSprites(this);
+
+    // Set up Switchy (the player character)
     this.switchy = this.add.sprite(gameWidth / 2, gameHeight - 16, "switchy");
     this.switchy.play("switchy-walk");
 
@@ -90,6 +76,15 @@ export class GameScene extends Phaser.Scene {
   update(time: number, delta: number) {
     // Convert delta to seconds for easier calculations
     const deltaSeconds = delta / 1000;
+
+    // The A key moves from center to the left of the screen
+    // The D key moves from center to the right of the screen
+    // Update position according to horizontal
+    this.switchy.setPosition(
+      this.cameras.main.width / 2 +
+        (this.horizontal * this.cameras.main.width) / 2,
+      this.cameras.main.height - 16
+    );
 
     // Jump when space is pressed or screen is tapped (handled via pointer events)
     // if (this.input.keyboard && Phaser.Input.Keyboard.JustDown(this.jumpKey)) {
