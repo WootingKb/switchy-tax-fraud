@@ -10,6 +10,7 @@ export class Obstacle {
   private flutterAmplitude: number = 0;
   private flutterFrequency: number = 0;
   private flutterOffset: number = 0;
+  private body!: Phaser.Physics.Arcade.Body;
 
   constructor(
     scene: Phaser.Scene,
@@ -24,6 +25,12 @@ export class Obstacle {
     this.sprite = this.scene.physics.add.sprite(x, -16, obstacleType);
     this.sprite.play(`${obstacleType}-fall`, true);
     this.sprite.setOrigin(0.5, 1);
+    this.body = this.sprite.body as Phaser.Physics.Arcade.Body;
+    this.body.setSize(this.sprite.width * 0.7, this.sprite.height * 0.7);
+    this.body.setOffset(
+      (this.sprite.width - this.body.width) / 2,
+      (this.sprite.height - this.body.height) / 2
+    );
 
     const minSpeed = 30 + score * 0.5;
     const maxSpeed = 60 + score;
