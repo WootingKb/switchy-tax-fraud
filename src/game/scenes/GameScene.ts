@@ -187,6 +187,7 @@ export class GameScene extends Phaser.Scene {
 
   handlePlayerHit() {
     if (this.player.isInvincible()) return;
+    this.cameras.main.shake(200, 0.01);
 
     const lives = this.player.getLives();
     if (lives <= 1) {

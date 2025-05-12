@@ -41,8 +41,22 @@ export class Obstacle {
       this.acceleration = 200 + score * 5;
     }
     if (movementType === "flutter") {
-      this.flutterAmplitude = Phaser.Math.Between(5, 15);
-      this.flutterFrequency = Phaser.Math.FloatBetween(3, 6);
+      const ampBase = 5;
+      const ampMax = 50;
+      this.flutterAmplitude = Phaser.Math.Clamp(
+        ampBase + score * 0.5,
+        ampBase,
+        ampMax
+      );
+
+      const freqBase = 3;
+      const freqMax = 10;
+      this.flutterFrequency = Phaser.Math.Clamp(
+        freqBase + score * 0.2,
+        freqBase,
+        freqMax
+      );
+
       this.flutterOffset = Phaser.Math.FloatBetween(0, Math.PI * 2);
     }
   }
