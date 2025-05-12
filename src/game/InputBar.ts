@@ -5,7 +5,7 @@ export class InputBar {
   private graphics: Phaser.GameObjects.Graphics;
   private width: number;
   private height: number;
-  private barHeight: number = 6;
+  private barHeight: number = 4;
   private barColor: number = 0x0f380f;
 
   constructor(scene: Phaser.Scene) {
