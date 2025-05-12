@@ -15,6 +15,8 @@ export class GameScene extends Phaser.Scene {
   private scoreText!: Phaser.GameObjects.Text;
   private scoreTimer!: Phaser.Time.TimerEvent;
 
+  private livesText!: Phaser.GameObjects.Text;
+
   private switchy!: Phaser.GameObjects.Sprite;
 
   private background!: Phaser.GameObjects.TileSprite;
@@ -75,28 +77,39 @@ export class GameScene extends Phaser.Scene {
       .setOrigin(0, 0)
       .setScrollFactor(0);
 
+    // Set up Switchy (the player character)
+    this.player = new Player(this, gameWidth / 2, gameHeight - 16, "switchy");
+
     document.fonts.load('24px "Monogram"').then(() => {
       this.scoreText = this.add
-        .text(8, 0, `${this.score}`, {
+        .text(8, 0, `SCORE: ${this.score}`, {
           fontFamily: "Monogram",
-          fontSize: "24px",
+          fontSize: "16px",
           color: "#0f380f",
         })
         .setOrigin(0, 0)
         .setDepth(1000);
+
+      this.livesText = this.add.text(
+        8,
+        12,
+        `LIVES: ${this.player.getLives()}`,
+        {
+          fontFamily: "Monogram",
+          fontSize: "16px",
+          color: "#0f380f",
+        }
+      );
     });
 
     this.scoreTimer = this.time.addEvent({
-      delay: 2000,
+      delay: 500,
       loop: true,
       callback: () => {
         this.score++;
-        this.scoreText.setText(`${this.score}`);
+        this.scoreText.setText(`SCORE: ${this.score}`);
       },
     });
-
-    // Set up Switchy (the player character)
-    this.player = new Player(this, gameWidth / 2, gameHeight - 16, "switchy");
 
     // Collision optimizations
     // this.switchy.setCollideWorldBounds(true);
@@ -176,13 +189,20 @@ export class GameScene extends Phaser.Scene {
   }
 
   handlePlayerHit() {
-    if (this.gameEnded) return;
-    this.scoreTimer.remove(false);
-    this.physics.pause();
-    this.gameEnded = true;
-    this.playWipeTransition(() =>
-      this.scene.start("GameOverScene", { score: this.score })
-    );
+    if (this.player.isInvincible()) return;
+
+    const lives = this.player.getLives();
+    if (lives <= 1) {
+      this.scoreTimer.remove(false);
+      this.physics.pause();
+      this.playWipeTransition(() =>
+        this.scene.start("GameOverScene", { score: this.score })
+      );
+    } else {
+      this.player.depleteLives();
+      this.livesText.setText(`LIVES: ${this.player.getLives()}`);
+      this.player.startInvincibility();
+    }
   }
 
   playWipeTransition(onComplete: () => void) {
