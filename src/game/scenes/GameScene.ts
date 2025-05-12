@@ -4,6 +4,7 @@ import { PlaceholderAssets } from "../createPlaceholderAssets";
 import { AnalogKey, AnalogReport } from "../../components/ConnectDevice";
 import { SpriteAssets } from "../createSpriteAssets";
 import { Obstacle } from "../Obstacle";
+import { InputBar } from "../InputBar";
 
 export class GameScene extends Phaser.Scene {
   private player!: Player;
@@ -29,6 +30,10 @@ export class GameScene extends Phaser.Scene {
 
   private gameEnded: boolean = false;
 
+  private inputBar!: InputBar;
+  private analogL: number = 0;
+  private analogR: number = 0;
+
   constructor() {
     super("GameScene");
   }
@@ -42,10 +47,10 @@ export class GameScene extends Phaser.Scene {
 
   onAnalogReport = (event: AnalogReport) => {
     const { data } = event;
-    const aKey = data.find((d) => d.key === AnalogKey.A)?.value ?? 0;
-    const dKey = data.find((d) => d.key === AnalogKey.D)?.value ?? 0;
+    this.analogL = data.find((d) => d.key === AnalogKey.A)?.value ?? 0;
+    this.analogR = data.find((d) => d.key === AnalogKey.D)?.value ?? 0;
 
-    this.horizontal = dKey - aKey;
+    this.horizontal = this.analogR - this.analogL;
   };
 
   preload() {
@@ -122,6 +127,8 @@ export class GameScene extends Phaser.Scene {
       );
     }
 
+    this.inputBar = new InputBar(this);
+
     this.events.on("shutdown", this.cleanup, this);
   }
 
@@ -152,10 +159,7 @@ export class GameScene extends Phaser.Scene {
       return o.isAlive();
     });
 
-    // Jump when space is pressed or screen is tapped (handled via pointer events)
-    // if (this.input.keyboard && Phaser.Input.Keyboard.JustDown(this.jumpKey)) {
-    //   this.jump();
-    // }
+    this.inputBar.update(this.analogL, this.analogR);
   }
 
   spawnObstacle() {
@@ -224,6 +228,10 @@ export class GameScene extends Phaser.Scene {
   cleanup() {
     if (this.player) {
       this.player.destroy();
+    }
+
+    if (this.inputBar) {
+      this.inputBar.destroy();
     }
 
     this.obstacles.forEach((o) => o.destroy());
