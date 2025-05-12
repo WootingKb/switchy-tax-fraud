@@ -56,6 +56,12 @@ export class SpriteAssets {
         frameHeight: 16,
       });
     }
+    if (!scene.textures.exists("heart")) {
+      scene.load.spritesheet("heart", "./assets/gfx/heart.png", {
+        frameWidth: 16,
+        frameHeight: 16,
+      });
+    }
   }
 
   static createSprites(scene: Phaser.Scene): void {

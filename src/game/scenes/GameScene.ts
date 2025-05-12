@@ -5,6 +5,7 @@ import { AnalogKey, AnalogReport } from "../../components/ConnectDevice";
 import { SpriteAssets } from "../createSpriteAssets";
 import { Obstacle } from "../Obstacle";
 import { InputBar } from "../InputBar";
+import { LivesDisplay } from "../LivesDisplay";
 
 export class GameScene extends Phaser.Scene {
   private player!: Player;
@@ -15,8 +16,6 @@ export class GameScene extends Phaser.Scene {
   private score: number = 0;
   private scoreText!: Phaser.GameObjects.Text;
   private scoreTimer!: Phaser.Time.TimerEvent;
-
-  private livesText!: Phaser.GameObjects.Text;
 
   private switchy!: Phaser.GameObjects.Sprite;
 
@@ -33,6 +32,8 @@ export class GameScene extends Phaser.Scene {
   private inputBar!: InputBar;
   private analogL: number = 0;
   private analogR: number = 0;
+
+  private livesDisplay!: LivesDisplay;
 
   constructor() {
     super("GameScene");
@@ -87,24 +88,13 @@ export class GameScene extends Phaser.Scene {
 
     document.fonts.load('24px "Monogram"').then(() => {
       this.scoreText = this.add
-        .text(8, 0, `SCORE: ${this.score}`, {
+        .text(4, 18, `SCORE: ${this.score}`, {
           fontFamily: "Monogram",
           fontSize: "16px",
           color: "#0f380f",
         })
         .setOrigin(0, 0)
         .setDepth(1000);
-
-      this.livesText = this.add.text(
-        8,
-        12,
-        `LIVES: ${this.player.getLives()}`,
-        {
-          fontFamily: "Monogram",
-          fontSize: "16px",
-          color: "#0f380f",
-        }
-      );
     });
 
     this.scoreTimer = this.time.addEvent({
@@ -128,6 +118,9 @@ export class GameScene extends Phaser.Scene {
     }
 
     this.inputBar = new InputBar(this);
+
+    this.livesDisplay = new LivesDisplay(this);
+    this.livesDisplay.updateLivesRemaining(this.player.getLives());
 
     this.events.on("shutdown", this.cleanup, this);
   }
@@ -204,7 +197,7 @@ export class GameScene extends Phaser.Scene {
       );
     } else {
       this.player.depleteLives();
-      this.livesText.setText(`LIVES: ${this.player.getLives()}`);
+      this.livesDisplay.updateLivesRemaining(this.player.getLives());
       this.player.startInvincibility();
     }
   }
@@ -232,6 +225,10 @@ export class GameScene extends Phaser.Scene {
 
     if (this.inputBar) {
       this.inputBar.destroy();
+    }
+
+    if (this.livesDisplay) {
+      this.livesDisplay.destroy();
     }
 
     this.obstacles.forEach((o) => o.destroy());
