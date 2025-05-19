@@ -87,18 +87,30 @@ const Game = () => {
     }
   }, []);
 
+  useEffect(() => {
+    if (device) {
+      (gameRef.current?.scene.getScene("GameScene") as GameScene)?.setDevice(
+        device
+      );
+    } else {
+      (
+        gameRef.current?.scene.getScene("GameScene") as GameScene
+      )?.closeDevice();
+    }
+  }, [device, gameRef.current]);
+
   const onDeviceConnect = useCallback((device: HIDDevice) => {
     setDevice((existing) => {
       if (existing) {
         existing.close();
       }
 
-      (gameRef.current?.scene.getScene("GameScene") as GameScene)?.setDevice(
-        device
-      );
-
       return device;
     });
+  }, []);
+
+  const onDeviceDisconnect = useCallback(() => {
+    setDevice(null);
   }, []);
 
   return (
@@ -111,7 +123,11 @@ const Game = () => {
         gap: "1rem",
       }}
     >
-      <ConnectDevice onConnect={onDeviceConnect} />
+      <ConnectDevice
+        onConnect={onDeviceConnect}
+        onDisconnect={onDeviceDisconnect}
+        device={device}
+      />
       <div style={{ width: "100%", height: "100%", position: "relative" }}>
         <div
           ref={containerRef}

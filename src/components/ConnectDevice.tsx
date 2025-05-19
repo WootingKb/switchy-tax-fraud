@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 
 export const WOOT_VID = 0x31e3;
 
@@ -15,10 +15,60 @@ declare global {
 }
 
 interface ConnectDeviceProps {
+  device: HIDDevice | null;
   onConnect: (device: HIDDevice) => void;
+  onDisconnect: (device: HIDDevice) => void;
+  showForgetButton?: boolean;
 }
 
-export function ConnectDevice({ onConnect }: ConnectDeviceProps) {
+export async function initDevice(device: HIDDevice) {
+  await device.open();
+  device.addEventListener("inputreport", (event) => {
+    const data = event.data;
+    const analogData = [];
+    for (let i = 0; i < data.byteLength; i += 3) {
+      const key = data.getUint16(i);
+      const value = data.getUint8(i + 2) / 255;
+
+      if (value === 0) break;
+      analogData.push({ key, value });
+    }
+    if (device.onanalogreport) {
+      device.onanalogreport({ data: analogData });
+    } else {
+      console.warn("No onanalogreport event listener");
+    }
+  });
+}
+
+let hasDoneInit = false;
+
+export function ConnectDevice({
+  device,
+  onConnect,
+  onDisconnect,
+  showForgetButton = false,
+}: ConnectDeviceProps) {
+  useEffect(() => {
+    if (hasDoneInit) {
+      return;
+    }
+    hasDoneInit = true;
+    console.log("Init connected devices");
+    navigator.hid.getDevices().then(async (devices) => {
+      const wootDevice = devices.find(
+        (device) =>
+          device.vendorId === WOOT_VID &&
+          device.collections[0].usagePage === WOOT_ANALOG_USAGE
+      );
+      if (wootDevice) {
+        console.log("Found device", wootDevice);
+        await initDevice(wootDevice);
+        onConnect(wootDevice);
+      }
+    });
+  }, [onConnect]);
+
   const onClick = useCallback(async () => {
     const device = await navigator.hid.requestDevice({
       filters: [
@@ -32,42 +82,54 @@ export function ConnectDevice({ onConnect }: ConnectDeviceProps) {
     if (device.length > 0) {
       const useDevice = device[0];
 
-      await useDevice.open();
-
       console.log("Got Device", useDevice);
 
-      useDevice.addEventListener("inputreport", (event) => {
-        // The data structure is that there are pairs of 2 bytes for the hid id and one byte for the analog value repeated over and over
-        const data = event.data;
-        const analogData = [];
-        for (let i = 0; i < data.byteLength; i += 3) {
-          const key = data.getUint16(i);
-          const value = data.getUint8(i + 2) / 255;
-
-          if (value === 0) {
-            break;
-          }
-          analogData.push({
-            key,
-            value,
-          });
-        }
-
-        if (useDevice.onanalogreport) {
-          useDevice.onanalogreport({ data: analogData });
-        } else {
-          console.warn("No onanalogreport event listener");
-        }
-      });
-
+      await initDevice(useDevice);
       onConnect(useDevice);
     }
   }, [onConnect]);
 
+  useEffect(() => {
+    const handler = async (event: HIDConnectionEvent) => {
+      console.log("Device disconnected", event);
+      if (device === event.device) {
+        await device.close();
+        onDisconnect(device);
+      }
+    };
+
+    navigator.hid.addEventListener("disconnect", handler);
+
+    // Cleanup
+    return () => {
+      navigator.hid.removeEventListener("disconnect", handler);
+    };
+  }, [device, onDisconnect]);
+
   return (
-    <button className="bg-blue-500 text-white p-2 rounded-md" onClick={onClick}>
-      Connect Device
-    </button>
+    <div>
+      <button
+        className="bg-blue-500 text-white p-2 rounded-md"
+        onClick={onClick}
+        onKeyDown={(e) => {
+          e.preventDefault();
+        }}
+      >
+        {device ? `${device.productName} Connected` : "Connect Device"}
+      </button>
+      {showForgetButton && device && (
+        <button
+          onClick={async () => {
+            if (device) {
+              await device.forget();
+              onDisconnect(device);
+            }
+          }}
+        >
+          x
+        </button>
+      )}
+    </div>
   );
 }
 

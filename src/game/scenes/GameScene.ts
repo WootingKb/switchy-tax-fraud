@@ -46,6 +46,13 @@ export class GameScene extends Phaser.Scene {
     };
   }
 
+  closeDevice() {
+    if (this.device) {
+      this.device.onanalogreport = undefined;
+      this.device = undefined;
+    }
+  }
+
   onAnalogReport = (event: AnalogReport) => {
     const { data } = event;
     this.analogL = data.find((d) => d.key === AnalogKey.A)?.value ?? 0;
