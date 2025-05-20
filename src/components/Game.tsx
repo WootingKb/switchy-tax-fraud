@@ -128,12 +128,21 @@ const Game = () => {
         onDisconnect={onDeviceDisconnect}
         device={device}
       />
-      <div style={{ width: "100%", height: "100%", position: "relative" }}>
+      <div
+        style={{
+          width: "100%",
+          height: "100%",
+          position: "relative",
+          display: "flex",
+        }}
+      >
         <div
           ref={containerRef}
           id="game-container"
           className="game-container"
           style={{ width: "100%", height: "100%" }}
+          tabIndex={0}
+          onClick={() => containerRef.current?.focus()}
         />
       </div>
     </div>

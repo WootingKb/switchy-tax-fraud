@@ -112,8 +112,9 @@ export function ConnectDevice({
         className="bg-blue-500 text-white p-2 rounded-md"
         onClick={onClick}
         onKeyDown={(e) => {
-          e.preventDefault();
+          if (e.key !== "Tab") e.preventDefault();
         }}
+        tabIndex={-1}
       >
         {device ? `${device.productName} Connected` : "Connect Device"}
       </button>
