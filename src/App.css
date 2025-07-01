@@ -112,7 +112,7 @@ footer {
   position: relative;
   width: 640px;
   height: 576px;
-  margin: 0 auto;
+  margin: auto;
 }
 
 .game-container canvas {
