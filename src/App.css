@@ -84,8 +84,10 @@ footer {
 }
 
 .game-container {
-  width: 640px;
-  height: 576px;
+  max-width: 800px;
+  max-height: 720px;
+  width: 100%;
+  height: 100%;
   border-radius: 0;
   overflow: hidden;
   box-shadow: none;
@@ -110,8 +112,10 @@ footer {
   align-items: center;
   justify-content: center;
   position: relative;
-  width: 640px;
-  height: 576px;
+  width: 100%;
+  height: 100%;
+  max-width: 800px;
+  max-height: 720px;
   margin: auto;
 }
 
