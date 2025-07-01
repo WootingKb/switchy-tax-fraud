@@ -114,33 +114,17 @@ const Game = () => {
   }, []);
 
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        width: "100%",
-        height: "100%",
-        gap: "1rem",
-      }}
-    >
+    <div className="game-root">
       <ConnectDevice
         onConnect={onDeviceConnect}
         onDisconnect={onDeviceDisconnect}
         device={device}
       />
-      <div
-        style={{
-          width: "100%",
-          height: "100%",
-          position: "relative",
-          display: "flex",
-        }}
-      >
+      <div className="game-wrapper">
         <div
           ref={containerRef}
           id="game-container"
           className="game-container"
-          style={{ width: "100%", height: "100%" }}
           tabIndex={0}
           onClick={() => containerRef.current?.focus()}
         />

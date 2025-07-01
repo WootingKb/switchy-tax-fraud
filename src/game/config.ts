@@ -21,6 +21,10 @@ export const gameConfig: Phaser.Types.Core.GameConfig = {
   scene: [MenuScene, GameScene, GameOverScene, NameEntryScene, HighScoresScene],
   scale: {
     parent: "game-container",
+    mode: Phaser.Scale.FIT, // scale up to fit the parent
+    autoCenter: Phaser.Scale.CENTER_BOTH, // center horizontally & vertically
+    width: 160,
+    height: 144,
   },
   input: {
     activePointers: 3,
