@@ -40,7 +40,7 @@ export class MenuScene extends Phaser.Scene {
       this.add
         .text(width / 2, height / 2 - 12, "TAX FRAUD", {
           fontFamily: "Monogram",
-          fontSize: "20px",
+          fontSize: "24px",
           color: "#0f380f",
         })
         .setOrigin(0.5, 0.5);

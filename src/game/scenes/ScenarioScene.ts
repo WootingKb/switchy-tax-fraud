@@ -49,7 +49,7 @@ export class ScenarioScene extends Phaser.Scene {
         .text(
           1,
           0,
-          "This game uses analog control. Help switchy escape the Belasting- dienst by gradually pressing A & D (or UwU buttons).\nTry it out now, and then press Space/Middle to start!",
+          "This game uses analog control. Help Switchy escape the Belasting- dienst by gradually pressing A & D (or UwU buttons).\nTry it out now, and then press Space/Middle to start!",
           {
             fontFamily: "Monogram",
             fontSize: "16px",
