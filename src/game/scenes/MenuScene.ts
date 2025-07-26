@@ -22,7 +22,7 @@ export class MenuScene extends Phaser.Scene {
 
     document.fonts.load('16px "Monogram"').then(() => {
       this.add
-        .text(width / 2, height - 32, "Play with WASD & Space :)", {
+        .text(width / 2, height - 32, "Win prizes on Fri & Sat!", {
           fontFamily: "Monogram",
           fontSize: "16px",
           color: "#0f380f",
@@ -97,7 +97,7 @@ export class MenuScene extends Phaser.Scene {
     const selected = this.options[this.selectedIndex];
     this.selectedIndex = 0;
     if (selected === "START GAME") {
-      this.scene.start("GameScene");
+      this.scene.start("ScenarioScene");
     } else if (selected === "HI SCORES") {
       this.scene.start("HighScoresScene");
     }

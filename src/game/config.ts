@@ -4,6 +4,7 @@ import { GameOverScene } from "./scenes/GameOverScene";
 import { MenuScene } from "./scenes/MenuScene";
 import { NameEntryScene } from "./scenes/NameEntryScene";
 import { HighScoresScene } from "./scenes/HighScoresScene";
+import { ScenarioScene } from "./scenes/ScenarioScene";
 
 export const gameConfig: Phaser.Types.Core.GameConfig = {
   type: Phaser.AUTO,
@@ -18,7 +19,14 @@ export const gameConfig: Phaser.Types.Core.GameConfig = {
       debug: false,
     },
   },
-  scene: [MenuScene, GameScene, GameOverScene, NameEntryScene, HighScoresScene],
+  scene: [
+    MenuScene,
+    GameScene,
+    GameOverScene,
+    NameEntryScene,
+    HighScoresScene,
+    ScenarioScene,
+  ],
   scale: {
     parent: "game-container",
     mode: Phaser.Scale.FIT, // scale up to fit the parent

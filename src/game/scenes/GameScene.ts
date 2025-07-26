@@ -39,6 +39,12 @@ export class GameScene extends Phaser.Scene {
     super("GameScene");
   }
 
+  init(data: { device?: HIDDevice }) {
+    if (data.device) {
+      this.setDevice(data.device);
+    }
+  }
+
   setDevice(device: HIDDevice) {
     this.device = device;
     device.onanalogreport = (event) => {

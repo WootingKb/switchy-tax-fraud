@@ -7,6 +7,7 @@ import { MenuScene } from "../game/scenes/MenuScene";
 import { GameOverScene } from "../game/scenes/GameOverScene";
 import { NameEntryScene } from "../game/scenes/NameEntryScene";
 import { HighScoresScene } from "../game/scenes/HighScoresScene";
+import { ScenarioScene } from "../game/scenes/ScenarioScene";
 
 const Game = () => {
   const [device, setDevice] = useState<HIDDevice | null>(null);
@@ -34,6 +35,7 @@ const Game = () => {
           GameOverScene,
           NameEntryScene,
           HighScoresScene,
+          ScenarioScene,
         ],
       });
     }, 50);
@@ -89,15 +91,15 @@ const Game = () => {
 
   useEffect(() => {
     if (device) {
-      (gameRef.current?.scene.getScene("GameScene") as GameScene)?.setDevice(
-        device
-      );
+      (
+        gameRef.current?.scene.getScene("ScenarioScene") as GameScene
+      )?.setDevice(device);
     } else {
       (
-        gameRef.current?.scene.getScene("GameScene") as GameScene
+        gameRef.current?.scene.getScene("ScenarioScene") as GameScene
       )?.closeDevice();
     }
-  }, [device, gameRef.current]);
+  }, [device, gameRef, gameRef.current]);
 
   const onDeviceConnect = useCallback((device: HIDDevice) => {
     setDevice((existing) => {
