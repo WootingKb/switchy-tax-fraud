@@ -72,7 +72,6 @@ export class MenuScene extends Phaser.Scene {
     });
 
     this.input.keyboard?.on("keydown", (event: KeyboardEvent) => {
-      console.log(event.key);
       if ([" ", "Enter"].includes(event.key)) {
         this.selectOption();
       }
