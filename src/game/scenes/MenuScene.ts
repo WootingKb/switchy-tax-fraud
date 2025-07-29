@@ -71,20 +71,19 @@ export class MenuScene extends Phaser.Scene {
         .setOrigin(0.5, 0.75);
     });
 
-    this.input.keyboard?.on("keydown-W", () => {
-      this.selectedIndex =
-        (this.selectedIndex + this.options.length - 1) % this.options.length;
+    this.input.keyboard?.on("keydown", (event: KeyboardEvent) => {
+      console.log(event.key);
+      if ([" ", "Enter"].includes(event.key)) {
+        this.selectOption();
+      }
+      if (["w", "ArrowUp"].includes(event.key)) {
+        this.selectedIndex =
+          (this.selectedIndex + this.options.length - 1) % this.options.length;
+      } else if (["s", "ArrowDown"].includes(event.key)) {
+        this.selectedIndex =
+          (this.selectedIndex + this.options.length + 1) % this.options.length;
+      }
       this.updateCursor();
-    });
-
-    this.input.keyboard?.on("keydown-S", () => {
-      this.selectedIndex =
-        (this.selectedIndex + this.options.length + 1) % this.options.length;
-      this.updateCursor();
-    });
-
-    this.input.keyboard?.on("keydown-SPACE", () => {
-      this.selectOption();
     });
   }
 

@@ -54,10 +54,10 @@ export class NameEntryScene extends Phaser.Scene {
           this.enteredName += key.toUpperCase();
 
           this.updateNameDisplay();
-        } else if (event.key === "Backspace" && this.enteredName.length > 0) {
+        } else if (["Backspace"].includes(key) && this.enteredName.length > 0) {
           this.enteredName = this.enteredName.slice(0, -1);
           this.updateNameDisplay();
-        } else if (event.key === " ") {
+        } else if ([" ", "Enter"].includes(key)) {
           this.saveScore();
           this.scene.start("MenuScene");
         }
@@ -79,8 +79,10 @@ export class NameEntryScene extends Phaser.Scene {
     const stored = localStorage.getItem("switchy-hiscores");
     const scores = stored ? JSON.parse(stored) : [];
 
-    scores.push(newEntry);
-    scores.sort((a: any, b: any) => b.score - a.score);
+    if (newEntry.name.length > 0) {
+      scores.push(newEntry);
+      scores.sort((a: any, b: any) => b.score - a.score);
+    }
 
     localStorage.setItem("switchy-hiscores", JSON.stringify(scores));
   }

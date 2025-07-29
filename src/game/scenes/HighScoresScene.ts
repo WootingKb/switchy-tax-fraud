@@ -36,12 +36,19 @@ export class HighScoresScene extends Phaser.Scene {
         .setOrigin(0.5);
     });
 
-    this.input.keyboard?.on("keydown-W", this.scrollUp, this);
-    this.input.keyboard?.on("keydown-S", this.scrollDown, this);
-
-    this.input.keyboard?.once("keydown-SPACE", () => {
-      this.scene.start("MenuScene");
-    });
+    this.input.keyboard?.on(
+      "keydown",
+      (event: KeyboardEvent) => {
+        if ([" ", "Enter"].includes(event.key)) {
+          this.scene.start("MenuScene");
+        } else if (["w", "ArrowUp"].includes(event.key)) {
+          this.scrollUp();
+        } else if (["s", "ArrowDown"].includes(event.key)) {
+          this.scrollDown();
+        }
+      },
+      this
+    );
   }
 
   renderScores() {

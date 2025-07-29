@@ -60,8 +60,10 @@ export class ScenarioScene extends Phaser.Scene {
         .setWordWrapWidth(width);
     });
 
-    this.input.keyboard?.on("keydown-SPACE", () => {
-      this.scene.start("GameScene", { device: this.device });
+    this.input.keyboard?.on("keydown", (event: KeyboardEvent) => {
+      if ([" ", "Enter"].includes(event.key)) {
+        this.scene.start("GameScene", { device: this.device });
+      }
     });
 
     this.events.on("shutdown", this.cleanup, this);
