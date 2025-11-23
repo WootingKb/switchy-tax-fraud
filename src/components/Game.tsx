@@ -2,12 +2,6 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import Phaser from "phaser";
 import { gameConfig } from "../game/config";
 import { ConnectDevice } from "./ConnectDevice";
-import { GameScene } from "../game/scenes/GameScene";
-import { MenuScene } from "../game/scenes/MenuScene";
-import { GameOverScene } from "../game/scenes/GameOverScene";
-import { NameEntryScene } from "../game/scenes/NameEntryScene";
-import { HighScoresScene } from "../game/scenes/HighScoresScene";
-import { ScenarioScene } from "../game/scenes/ScenarioScene";
 
 const Game = () => {
   const [device, setDevice] = useState<HIDDevice | null>(null);
@@ -25,19 +19,16 @@ const Game = () => {
       ...gameConfig,
     };
 
+    const params = new URLSearchParams(window.location.search);
+    const titleString = params.get("title") || "Switchy plushie when? ;)";
+
     // Small delay to ensure DOM has fully rendered
     const initTimer = setTimeout(() => {
       gameRef.current = new Phaser.Game({
         ...config,
-        scene: [
-          MenuScene,
-          GameScene,
-          GameOverScene,
-          NameEntryScene,
-          HighScoresScene,
-          ScenarioScene,
-        ],
       });
+
+      gameRef.current.scene.start("MenuScene", { titleString });
     }, 50);
 
     // Handle orientation change and resize events
@@ -88,18 +79,6 @@ const Game = () => {
       return () => resizeObserver.disconnect();
     }
   }, []);
-
-  useEffect(() => {
-    if (device) {
-      (
-        gameRef.current?.scene.getScene("ScenarioScene") as GameScene
-      )?.setDevice(device);
-    } else {
-      (
-        gameRef.current?.scene.getScene("ScenarioScene") as GameScene
-      )?.closeDevice();
-    }
-  }, [device, gameRef, gameRef.current]);
 
   const onDeviceConnect = useCallback((device: HIDDevice) => {
     setDevice((existing) => {

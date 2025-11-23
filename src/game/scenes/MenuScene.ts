@@ -1,14 +1,20 @@
 import Phaser from "phaser";
 import { SpriteAssets } from "../createSpriteAssets";
+import { gameConfig } from "../config";
 
 export class MenuScene extends Phaser.Scene {
   private selectedIndex: number = 0;
   private options: string[] = ["START GAME", "HI SCORES"];
   private optionTexts: Phaser.GameObjects.Text[] = [];
+  private titleString: string = "";
   private cursor!: Phaser.GameObjects.Triangle;
 
   constructor() {
     super("MenuScene");
+  }
+
+  init(data: { titleString?: string }) {
+    this.titleString = data.titleString || "Switchy plushie when? ;)";
   }
 
   preload() {
@@ -22,7 +28,7 @@ export class MenuScene extends Phaser.Scene {
 
     document.fonts.load('16px "Monogram"').then(() => {
       this.add
-        .text(width / 2, height - 32, "Hello ZFX Shanghai 2025!", {
+        .text(width / 2, height - 32, this.titleString, {
           fontFamily: "Monogram",
           fontSize: "16px",
           color: "#0f380f",
