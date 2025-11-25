@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import Phaser from "phaser";
 import { gameConfig } from "../game/config";
 import { ConnectDevice } from "./ConnectDevice";
+import { GameScene } from "../game/scenes/GameScene";
 
 const Game = () => {
   const [device, setDevice] = useState<HIDDevice | null>(null);
@@ -65,6 +66,18 @@ const Game = () => {
       }
     };
   }, []);
+
+  useEffect(() => {
+    if (device) {
+      (
+        gameRef.current?.scene.getScene("ScenarioScene") as GameScene
+      )?.setDevice(device);
+    } else {
+      (
+        gameRef.current?.scene.getScene("ScenarioScene") as GameScene
+      )?.closeDevice();
+    }
+  }, [device, gameRef]);
 
   // Force container to take up full size
   useEffect(() => {
