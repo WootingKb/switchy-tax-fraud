@@ -2,7 +2,9 @@ import { useCallback, useEffect } from "react";
 
 export const WOOT_VID = 0x31e3;
 
-export const WOOT_ANALOG_USAGE = 0xff54;
+export const WOOT_ANALOG_USAGE_V1 = 0xff54;
+
+export const WOOT_ANALOG_USAGE_V2 = 0xff53;
 
 export interface AnalogReport {
   data: { key: number; value: number }[];
@@ -21,18 +23,55 @@ interface ConnectDeviceProps {
   showForgetButton?: boolean;
 }
 
+export function isAnalogInterface(device: HIDDevice): boolean {
+  const page = device.collections[0]?.usagePage;
+  return page === WOOT_ANALOG_USAGE_V1 || page === WOOT_ANALOG_USAGE_V2;
+}
+
+function pickAnalogInterface(devices: HIDDevice[]): HIDDevice | undefined {
+  const v2 = devices.find(
+    (d) => d.collections[0]?.usagePage === WOOT_ANALOG_USAGE_V2
+  );
+  if (v2) return v2;
+  return devices.find(
+    (d) => d.collections[0]?.usagePage === WOOT_ANALOG_USAGE_V1
+  );
+}
+
+function parseV1Report(data: DataView): AnalogReport["data"] {
+  const entries: AnalogReport["data"] = [];
+  for (let i = 0; i + 3 <= data.byteLength; i += 3) {
+    const key = data.getUint16(i);
+    if (key === 0) continue;
+    entries.push({ key, value: data.getUint8(i + 2) / 255 });
+  }
+  return entries;
+}
+
+function parseV2Report(data: DataView): AnalogReport["data"] {
+  const entries: AnalogReport["data"] = [];
+  for (let i = 0; i + 4 <= data.byteLength; i += 4) {
+    const key = data.getUint8(i + 1);
+    if (key === 0) continue;
+    const packed = data.getUint8(i + 2);
+    const rawValue = data.getUint8(i + 3);
+    const valuePart = (packed >> 6) & 0x03;
+    const value = ((rawValue << 2) | valuePart) / 1023;
+    entries.push({ key, value });
+  }
+  return entries;
+}
+
 export async function initDevice(device: HIDDevice) {
   await device.open();
-  device.addEventListener("inputreport", (event) => {
-    const data = event.data;
-    const analogData = [];
-    for (let i = 0; i < data.byteLength; i += 3) {
-      const key = data.getUint16(i);
-      const value = data.getUint8(i + 2) / 255;
 
-      if (value === 0) break;
-      analogData.push({ key, value });
-    }
+  const isV2 = device.collections[0]?.usagePage === WOOT_ANALOG_USAGE_V2;
+
+  device.addEventListener("inputreport", (event) => {
+    const analogData = isV2
+      ? parseV2Report(event.data)
+      : parseV1Report(event.data);
+
     if (device.onanalogreport) {
       device.onanalogreport({ data: analogData });
     } else {
@@ -56,13 +95,13 @@ export function ConnectDevice({
     hasDoneInit = true;
     console.log("Init connected devices");
     navigator.hid.getDevices().then(async (devices) => {
-      const wootDevice = devices.find(
-        (device) =>
-          device.vendorId === WOOT_VID &&
-          device.collections[0].usagePage === WOOT_ANALOG_USAGE
+      const wootDevice = pickAnalogInterface(
+        devices.filter((d) => d.vendorId === WOOT_VID)
       );
+
       if (wootDevice) {
         console.log("Found device", wootDevice);
+
         await initDevice(wootDevice);
         onConnect(wootDevice);
       }
@@ -70,18 +109,15 @@ export function ConnectDevice({
   }, [onConnect]);
 
   const onClick = useCallback(async () => {
-    const device = await navigator.hid.requestDevice({
+    const devices = await navigator.hid.requestDevice({
       filters: [
-        {
-          vendorId: WOOT_VID,
-          usagePage: WOOT_ANALOG_USAGE,
-        },
+        { vendorId: WOOT_VID, usagePage: WOOT_ANALOG_USAGE_V1 },
+        { vendorId: WOOT_VID, usagePage: WOOT_ANALOG_USAGE_V2 },
       ],
     });
 
-    if (device.length > 0) {
-      const useDevice = device[0];
-
+    const useDevice = pickAnalogInterface(devices);
+    if (useDevice) {
       console.log("Got Device", useDevice);
 
       await initDevice(useDevice);
@@ -89,6 +125,7 @@ export function ConnectDevice({
     }
   }, [onConnect]);
 
+  // Handle device disconnect
   useEffect(() => {
     const handler = async (event: HIDConnectionEvent) => {
       console.log("Device disconnected", event);
@@ -112,9 +149,8 @@ export function ConnectDevice({
         className="bg-blue-500 text-white p-2 rounded-md"
         onClick={onClick}
         onKeyDown={(e) => {
-          if (e.key !== "Tab") e.preventDefault();
+          e.preventDefault();
         }}
-        tabIndex={-1}
       >
         {device ? `${device.productName} Connected` : "Connect Device"}
       </button>
